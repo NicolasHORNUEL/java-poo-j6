@@ -7,6 +7,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 import fr.diginamic.recensement.entites.Recensement;
 import fr.diginamic.recensement.entites.Ville;
+import fr.diginamic.recensement.exceptions.UnknownArgException;
 
 /** Recherche et affichage de la population d'un département
  * @author DIGINAMIC
@@ -15,7 +16,7 @@ import fr.diginamic.recensement.entites.Ville;
 public class RecherchePopulationDepartementService extends MenuService {
 
 	@Override
-	public void traiter(Recensement rec, Scanner scanner) {
+	public void traiter(Recensement rec, Scanner scanner) throws UnknownArgException {
 		
 		System.out.println("Quel est le code du département recherché ? ");
 		String choix = scanner.nextLine();
@@ -25,6 +26,17 @@ public class RecherchePopulationDepartementService extends MenuService {
 		}
 		
 		List<Ville> villes = rec.getVilles();
+		
+		boolean bool = false;
+		for (Ville ville : villes) {
+			if (ville.getCodeDepartement().equalsIgnoreCase(choix)) {
+				bool = !bool;
+			}
+		}
+		if (!bool) {
+	        throw new UnknownArgException("Aucun département ne correspond à votre recherche");
+		}
+		
 		int somme = 0;
 		for (Ville ville: villes){
 			if (ville.getCodeDepartement().equalsIgnoreCase(choix)){

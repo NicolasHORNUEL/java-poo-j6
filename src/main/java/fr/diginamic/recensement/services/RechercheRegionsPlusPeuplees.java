@@ -10,6 +10,7 @@ import java.util.Scanner;
 import fr.diginamic.recensement.entites.Recensement;
 import fr.diginamic.recensement.entites.Region;
 import fr.diginamic.recensement.entites.Ville;
+import fr.diginamic.recensement.exceptions.UnknownArgException;
 import fr.diginamic.recensement.services.comparators.EnsemblePopComparateur;
 
 /**
@@ -21,7 +22,7 @@ import fr.diginamic.recensement.services.comparators.EnsemblePopComparateur;
 public class RechercheRegionsPlusPeuplees extends MenuService {
 
 	@Override
-	public void traiter(Recensement recensement, Scanner scanner) {
+	public void traiter(Recensement recensement, Scanner scanner) throws UnknownArgException {
 
 		System.out.println("Veuillez saisir un nombre de régions:");
 		String nbRegionsStr = scanner.nextLine();
@@ -30,6 +31,15 @@ public class RechercheRegionsPlusPeuplees extends MenuService {
 		// On récupére la liste des villes du recensement
 		List<Ville> villes = recensement.getVilles();
 
+		boolean bool = false;
+		for (Ville ville : villes) {
+			if (ville.getCodeRegion().equalsIgnoreCase(nbRegionsStr)) {
+				bool = !bool;
+			}
+		}
+		if (!bool) {
+	        throw new UnknownArgException("Aucune région ne correspond à votre recherche");
+		}
 		// On créé une HashMap pour stocker les régions
 		// - Clé: nom de la région
 		// - Valeur: instance de région
